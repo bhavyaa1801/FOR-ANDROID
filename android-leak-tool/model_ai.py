@@ -6,17 +6,24 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
 import joblib
 import json
-from model_func.ensure_model_feature import ensure_model_features 
+import sys
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, project_root)
+from model_func.ensure_model_feature import ensure_model_features
+
+# === Base Project Paths (Dynamic) ===
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+case_base_path = os.path.join(project_root, "my_android_logs", "CASE_FILES_raw_logs")
+model_dir = os.path.join(project_root, "my_android_logs", "models")
+global_data_path = os.path.join(model_dir, "global_training_data.csv")
 
 # === User Input - Case Folder ===
-base_path = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs"
-case_name = input("📂 Enter the case folder name: ")
-case_folder = os.path.join(base_path, case_name)
+case_name = input("📂 Enter the case folder name: ").strip()
+case_folder = os.path.join(case_base_path, case_name)
 log_file = os.path.join(case_folder, "resolved_dns_log.csv")
 
 if not os.path.exists(log_file):
     raise FileNotFoundError(f"❌ Log file not found at: {log_file}")
-
 print(f"✅ Using log file: {log_file}")
 
 # === Load the Log Data ===
@@ -33,16 +40,15 @@ if 'timestamp' in df.columns:
 else:
     print("⚠️ No 'timestamp' column found — skipping time-based features.")
 
-#load model features
-model_dir= r"D:\Projects\android-leak-tool\my_android_logs\models"
-feature_list_path = os.path.join(model_dir , "feature_list.json")
-with open(feature_list_path ,"r") as f:
+# === Load Model Feature List ===
+feature_list_path = os.path.join(model_dir, "feature_list.json")
+with open(feature_list_path, "r") as f:
     features = json.load(f)
 
-#align column
+# === Align Columns to Feature List ===
 df = ensure_model_features(df, feature_list_path)
 
-# Ensure 'is_suspicious' column exists
+# === Labeling Suspicious IPs ===
 if 'is_suspicious' not in df.columns:
     if 'ip' in df.columns and df['ip'].notna().any():
         master_list_path = os.path.join(case_folder, "master_list.csv")
@@ -53,7 +59,6 @@ if 'is_suspicious' not in df.columns:
         else:
             master_ips = set()
             print("⚠️ No master list found — assuming empty list.")
-
         df["is_suspicious"] = df["ip"].apply(lambda ip: ip in master_ips if pd.notna(ip) else False)
         print("✅ 'is_suspicious' column created based on master list.")
     else:
@@ -62,30 +67,30 @@ if 'is_suspicious' not in df.columns:
 
 y = df['is_suspicious'].astype(int)
 
-# scale the features
-X = df[features].fillna(0)                 ##
+# === Feature Scaling ===
+X = df[features].fillna(0)
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# train test split
+# === Train/Test Split ===
 X_train, X_test, y_train, y_test = train_test_split(
     X_scaled, y, test_size=0.3, random_state=42
 )
 
-# train rf
+# === Train Random Forest ===
 model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
-# evaluate
+# === Evaluate Model ===
 y_pred = model.predict(X_test)
 print("📊 Classification Report:")
 print(classification_report(y_test, y_pred))
 
-# predict all logs
+# === Predict All ===
 df['predicted_suspicious'] = model.predict(X_scaled)
 df['suspicion_probability'] = model.predict_proba(X_scaled)[:, 1]
 
-# Export Flagged Entries to Case Folder 
+# === Export Flagged Entries ===
 flagged_output = os.path.join(case_folder, "ml_flagged_suspicious.csv")
 df[df['predicted_suspicious'] == 1].to_csv(flagged_output, index=False)
 print(f"📁 Saved flagged logs → {flagged_output}")
@@ -98,7 +103,7 @@ joblib.dump(scaler, scaler_path)
 print(f"📁 Model saved at → {model_path}")
 print(f"📁 Scaler saved at → {scaler_path}")
 
-# === Rank IPs by Risk (and Timestamp if available) ===
+# === Rank IPs ===
 suspicious_df = df[df['predicted_suspicious'] == 1]
 agg_dict = {'suspicion_probability': 'max'}
 if 'timestamp' in df.columns:
@@ -122,8 +127,7 @@ print(f"📁 Ranked suspicious IPs saved → {ranked_ip_path}")
 print("🔝 Top 10 Most Suspicious IPs:")
 print(ip_risk_scores.head(10))
 
-# === Append to Global Training Data ===
-global_data_path = r"D:\Projects\android-leak-tool\my_android_logs\models\global_training_data.csv"
+# === Append to Global Training Dataset ===
 case_training_data = df[features + ['is_suspicious']].copy()
 case_training_data.to_csv(global_data_path, mode='a', index=False, header=not os.path.exists(global_data_path))
 print(f"📁 Appended case training data to → {global_data_path}")

@@ -1,13 +1,16 @@
+import os
 import pandas as pd
-import os 
 import json
 import requests
 from ipwhois import IPWhois
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 
 def enrich_suspicious_ips(ip_list, case_folder):
-    # Define all paths
-    models_dir = r"D:\Projects\android-leak-tool\my_android_logs\models"
+    # === Dynamic Project Base Path ===
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    models_dir = os.path.join(project_root, "my_android_logs", "models")
+
+    # === Paths ===
     geo_path = os.path.join(case_folder, "geo_cache.json")
     whois_path = os.path.join(case_folder, "whois_cache.json")
     master_geo_path = os.path.join(models_dir, "master_suspicious_geo_cache.json")
@@ -15,9 +18,10 @@ def enrich_suspicious_ips(ip_list, case_folder):
     report_path = os.path.join(models_dir, "master_suspicious_ip_report.csv")
     ranked_path = os.path.join(case_folder, "ranked_suspicious_ips.csv")
 
-    # Load all caches
+    # === Load all caches ===
     def safe_load(path):
-        if not os.path.exists(path): return {}
+        if not os.path.exists(path):
+            return {}
         try:
             with open(path, "r") as f:
                 return json.load(f)
@@ -70,7 +74,7 @@ def enrich_suspicious_ips(ip_list, case_folder):
         info["timestamp"] = datetime.now().isoformat()
         return info
 
-    # Load ranked IP metadata
+    # === Load ranked IP metadata ===
     if not os.path.exists(ranked_path):
         raise FileNotFoundError(f"Missing ranked suspicious file at {ranked_path}")
     ranked_df = pd.read_csv(ranked_path)
@@ -112,7 +116,7 @@ def enrich_suspicious_ips(ip_list, case_folder):
             geo = geo_map.get(ip, {})
             whois = whois_map.get(ip, {})
 
-        # This must run for all IPs
+        # Process all IPs regardless
         matched = ranked_df[ranked_df['ip'] == ip]
         if matched.empty:
             continue
@@ -142,10 +146,14 @@ def enrich_suspicious_ips(ip_list, case_folder):
         else:
             pd.DataFrame(rows).to_csv(report_path, index=False)
 
-    # Save updated caches
-    with open(geo_path, "w") as f: json.dump(geo_map, f)
-    with open(whois_path, "w") as f: json.dump(whois_map, f)
-    with open(master_geo_path, "w") as f: json.dump(master_geo_map, f)
-    with open(master_whois_path, "w") as f: json.dump(master_whois_map, f)
+    # === Save updated caches ===
+    with open(geo_path, "w") as f:
+        json.dump(geo_map, f)
+    with open(whois_path, "w") as f:
+        json.dump(whois_map, f)
+    with open(master_geo_path, "w") as f:
+        json.dump(master_geo_map, f)
+    with open(master_whois_path, "w") as f:
+        json.dump(master_whois_map, f)
 
     return len(new_ips)

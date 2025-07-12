@@ -1,10 +1,13 @@
 import streamlit as st
 import pandas as pd
-import os
+import os 
+import sys
 import joblib
 import subprocess
 import altair as alt
 import json
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".." ,".."))
+sys.path.insert(0, project_root)
 from model_func.ensure_model_feature import ensure_model_features 
 
 st.markdown("""
@@ -32,7 +35,7 @@ st.write(f"Case Path: `{case_path}`")
 # MODEL
 if st.button("Start Processing"):
  with st.spinner("Scanning for suspicious activity..."):
-  global_model_dir = r"D:\Projects\android-leak-tool\my_android_logs\models"
+  global_model_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "models"))
   model_path = os.path.join(global_model_dir, "suspicious_model.pkl")
   scaler_path = os.path.join(global_model_dir, "scaler.pkl")
   feature_list_path = os.path.join(global_model_dir, "feature_list.json")
@@ -134,7 +137,8 @@ if st.button("Start Processing"):
 # === Retrain Global Model Button ===
 st.markdown("---")
 st.subheader("Retrain Global AI Model")
-retrain_script = os.path.abspath("retrain_global_model.py")
+retrain_script = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "retrain_global_model.py"))
+
 
 if st.button("Retrain Global Model"):
     with st.spinner("Updating global model..."):

@@ -54,7 +54,8 @@ with col2:
             st.warning("Case name is required.")
         else:
             # Create case directory
-            base_dir = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs"
+            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "CASE_FILES_raw_logs"))
+
             case_folder = os.path.join(base_dir, case_name.replace(" ", "_"))
             os.makedirs(case_folder, exist_ok=True)
 
@@ -78,15 +79,13 @@ with col2:
  #----------------------------------------------- load existing case -------------------------------------------
  with tab2:
     st.subheader("Select Existing Case")
-    base_dir = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs"
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "CASE_FILES_raw_logs"))
 
-    if not os.path.exists(base_dir):
-        st.info("No case directory found yet.")
-    else:
-        cases = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
-        if not cases:
+    os.makedirs(base_dir, exist_ok=True)
+    cases = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
+    if not cases:
             st.warning("No cases found.")
-        else:
+    else:
             selected = st.selectbox("Select a case", cases , key="select_case_tab2")
             col1 , spacer , col2 , col3 = st.columns([1,2,1,1])
             with col1:
@@ -119,15 +118,14 @@ with col2:
  #--------------------------------tab3 
  with tab3:
      st.subheader("Select Case")
-     base_dir = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs"
+     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "CASE_FILES_raw_logs"))
 
-     if not os.path.exists(base_dir):
-        st.info("No case directory found yet.")
-     else:
-        cases2 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
-        if not cases2:
+     os.makedirs(base_dir, exist_ok=True)
+     
+     cases2 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
+     if not cases2:
             st.warning("No cases found.")
-        else:
+     else:
              selected2 = st.selectbox("Select a case to get the suspicious IPs", cases2 ,key="select_case_tab3")
              if st.button("NEXT : Flag Sus IPs"):
                 case_path = os.path.join(base_dir, selected2)
@@ -141,15 +139,13 @@ with col2:
  #-----------------------tab4
  with tab4:
      st.subheader("Select Case To Get Data About Suspicious IPs")
-     base_dir = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs"       
+     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "CASE_FILES_raw_logs"))  
     
-     if not os.path.exists(base_dir):
-        st.info("No case directory found yet")
-     else:
-        cases3 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
-        if not cases3:
+     os.makedirs(base_dir, exist_ok=True)
+     cases3 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
+     if not cases3:
             st.warning("No cases found.")
-        else:
+     else:
             selected3 = st.selectbox("Select the case for which you want the IPs data" , cases3 , key="select_case_tab4")  
             if st.button(" NEXT: Get Data"):
                 case_path = os.path.join(base_dir , selected3)
@@ -163,15 +159,13 @@ with col2:
  #--------------------------tab 5
  with tab5:
       st.subheader("Select Case To Scan PORTS of suspicious ip's")    
-      base_dir = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs" 
+      base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "CASE_FILES_raw_logs"))
 
-      if not os.path.exists(base_dir):
-          st.info("No Case directory found yet")
-      else:
-          case4 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir , d))]
-          if not case4:
+      os.makedirs(base_dir, exist_ok=True)
+      case4 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir , d))]
+      if not case4:
               st.warning("No cases found")
-          else:
+      else:
               sel4 = st.selectbox("select case to scan ports" , case4 , key="select_case_tab5")
               if st.button("NEXT: scan"):
                   case_path=os.path.join(base_dir,sel4)
@@ -193,15 +187,10 @@ with tab6:
         key="timeline_input_mode"
     )
 
-    base_dir = r"D:\Projects\android-leak-tool\my_android_logs\CASE_FILES_raw_logs"
-    
-    # --------------------------------
-    # MODE 1: Use Existing Case Folder
-    # --------------------------------
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "my_android_logs", "CASE_FILES_raw_logs"))
+    os.makedirs(base_dir, exist_ok=True)
+
     if input_mode == "Use existing case folder":
-        if not os.path.exists(base_dir):
-            st.info("No Case directory found yet.")
-        else:
             case5 = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
             if not case5:
                 st.warning("⚠️ No cases found.")
@@ -214,9 +203,6 @@ with tab6:
                     st.session_state.trigger_parse = "timeline"
                     st.switch_page("pages/timeline_viewer.py")
 
-    # --------------------------------
-    # MODE 2: Upload Files
-    # --------------------------------
     elif input_mode == "Upload individual log files":
         uploaded_dns = st.file_uploader("Upload resolved_dns_log.csv", type=["csv", "xlsx"], key="dns_tab6")
         uploaded_ips = st.file_uploader("Upload ranked_suspicious_ips.csv", type=["csv", "xlsx"], key="ips_tab6")
