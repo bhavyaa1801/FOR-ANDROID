@@ -1,12 +1,12 @@
 # FOR-ANDROID
 An AI Enriched Tool For Investigating Internal Leaks From Android Devices Using OSINT &amp; Forensics
 ---
-# 🌐 DNS Log & Network Analysis Module — FORANDROID
+ 🌐 DNS Log & Network Analysis Module — FORANDROID
 This module is part of the **FORANDROID Project**, focused on digital forensics and open-source intelligence (OSINT) from Android devices. It handles the **analysis of DNS logs and network-level activity** extracted during a forensic investigation. The module helps in uncovering suspicious domains,IP enrichment, geographic patterns , source -> ASN -> country mapping , port scanning of enriched data , timeline generation 
 
 ---
 
-# 🧩 Module Goals
+ 🧩 Module Goals
 - Provide forensic insight into **app-domain-IP relationships**
 - **Resolve domains to IPs** and enrich them with WHOIS & GeoIP data
 - Detect **anomalous or malicious DNS activity**
@@ -26,7 +26,7 @@ This module is part of the **FORANDROID Project**, focused on digital forensics 
 
 ---
 
-# 🛠️ Tech Stack
+ 🛠️ Tech Stack
 
 Languages: Python, Bash
 Tools: ADB, Nmap, WHOIS, APKTool, EXIF
@@ -38,7 +38,7 @@ UI Framework: Streamlit
 
 ---
 
-# ⚙️ Setup Instructions
+ ⚙️ Setup Instructions
 
 1. Clone the repository:
  bash
@@ -54,7 +54,7 @@ pip install -r requirements.txt
 
 ---
 
-# ▶️ How to Use (UI Workflow)
+ ▶️ How to Use (UI Workflow)
 1.  **Launch the UI**:
 bash
 streamlit run streamlit_ui/launch.py
@@ -72,7 +72,7 @@ All actions are done by clicking buttons — no code or terminal needed.
 
 ---
 
-# PROJECT STRUCTURE 
+ PROJECT STRUCTURE 
 FORANDROID/
 ├── Home.py
 ├── app/
@@ -89,19 +89,20 @@ FORANDROID/
 ├── requirements.txt
 
 ---
-# OUTPUT FILE 
+ OUTPUT FILE 
 All outputs are saved inside each case folder
 
 ---
 
-# 🙋‍♀️ Contributors
+🙋‍♀️ Contributors
 Bhavya Rajput – Lead Developer & Analyst
 IGDTUW – Institutional Support
 
 Special thanks to the FORANDROID team for their support and contributions.
 
 ---
-
+🤝 Contributions
+Pull requests, feedback, and suggestions are welcome. Let's build better forensic tooling together.
 
 
 
