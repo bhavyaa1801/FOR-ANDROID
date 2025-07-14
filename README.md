@@ -21,11 +21,11 @@ FORANDROID analyzes DNS logs and network activity extracted from Android devices
 ## Installation
 
 bash
-git clone https://github.com/yourusername/FORANDROID.git
-cd FORANDROID
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+- git clone https://github.com/yourusername/FORANDROID.git
+- cd FORANDROID
+- python -m venv venv
+- source venv/bin/activate
+- pip install -r requirements.txt
 
 ---
 
@@ -45,6 +45,8 @@ Follow the UI workflow: Create case → Extract logs → Parse DNS → Resolve d
 *Analysis:* Pandas, RandomForest, Isolation Forest  
 *Tools:* Nmap, WHOIS, GeoIP
 
+---
+
 ## Project Structure
 
 FORANDROID/
@@ -62,9 +64,14 @@ FORANDROID/
 │       └── processed/
 ├── requirements.txt
 
-
+---
 
 ## Contributors
 
 *Bhavya Rajput* – Lead Developer  
 *IGDTUW* – Institutional Support
+
+---
+
+## Contributions
+Pull requests, feedback, and suggestions are welcome. Let's build better forensic tooling together.
