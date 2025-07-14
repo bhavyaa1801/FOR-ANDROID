@@ -1,78 +1,52 @@
-# FOR-ANDROID
-An AI Enriched Tool For Investigating Internal Leaks From Android Devices Using OSINT &amp; Forensics
----
- 🌐 DNS Log & Network Analysis Module — FORANDROID
-This module is part of the **FORANDROID Project**, focused on digital forensics and open-source intelligence (OSINT) from Android devices. It handles the **analysis of DNS logs and network-level activity** extracted during a forensic investigation. The module helps in uncovering suspicious domains,IP enrichment, geographic patterns , source -> ASN -> country mapping , port scanning of enriched data , timeline generation 
+# FORANDROID
+
+An AI-enhanced tool for investigating internal leaks from Android devices using OSINT & forensics.
+
+## Overview
+
+FORANDROID analyzes DNS logs and network activity extracted from Android devices to detect suspicious communication patterns and potential data leaks through comprehensive IP enrichment and machine learning-based anomaly detection.
 
 ---
 
- 🧩 Module Goals
-- Provide forensic insight into **app-domain-IP relationships**
-- **Resolve domains to IPs** and enrich them with WHOIS & GeoIP data
-- Detect **anomalous or malicious DNS activity**
-- Aid in building a timeline of suspicious communication events
-- source ip -> ASN -> country mapping
+## Key Features
+
+- Parse DNS logs from Android devices via ADB
+- Resolve domains to IPs with WHOIS & GeoIP enrichment
+- ML-based suspicious activity detection (RandomForest)
+- Geographic mapping and timeline generation
+- Source IP to ASN and country mapping
 
 ---
 
-# 🔍 Features
+## Installation
 
-- ✅ Parse DNS logs extracted from Android using ADB
-- 🌐 Resolve domain names via `socket` and cache results
-- 📍 Enrich IPs with ASN, organization, and country information
-- 📊 Visualize network spread via maps and dataframes
-- 🧠 ML-based detection of suspicious IPs/domains (RandomForest)
-- 🧵 Correlate logs across apps, domains, and resolved IPs
-
----
-
- 🛠️ Tech Stack
-
-Languages: Python, Bash
-Tools: ADB, Nmap, WHOIS, APKTool, EXIF
-Python Libraries: Pandas, Matplotlib, Altair, SQLite
-AI Algorithms: Random Forest, Isolation Forest, NLP
-Log Parsers: XML Parser, ADB Log Parser, DNS Log Parser
-Platforms: Git, Docker, Jupyter Notebook, VS Code
-UI Framework: Streamlit
-
----
-
- ⚙️ Setup Instructions
-
-1. Clone the repository:
- bash
+bash
 git clone https://github.com/yourusername/FORANDROID.git
 cd FORANDROID
-
-2.Create and activate a virtual environment:
 python -m venv venv
-source venv/bin/activate  # For Windows: venv\Scripts\activate
-
-3.Install dependencies:
+source venv/bin/activate
 pip install -r requirements.txt
 
 ---
 
- ▶️ How to Use (UI Workflow)
-1.  **Launch the UI**:
+## Usage
+
 bash
 streamlit run streamlit_ui/launch.py
 
-2. Steps in the Interface:
-📁 Create or select a case
-📱 Extract logs from device (via ADB)
-🧹 Parse DNS logs and identify unique domains
-🌐 Resolve domains to IPs
-🧠 Run ML model to flag suspicious IPs
-📍 Enrich IPs with WHOIS & GeoIP
-📊 View analytics (maps, tables, timelines)
 
-All actions are done by clicking buttons — no code or terminal needed.
+Follow the UI workflow: Create case → Extract logs → Parse DNS → Resolve domains → Run ML analysis → View results
 
 ---
 
- PROJECT STRUCTURE 
+## Tech Stack
+
+*Core:* Python, Streamlit, ADB  
+*Analysis:* Pandas, RandomForest, Isolation Forest  
+*Tools:* Nmap, WHOIS, GeoIP
+
+## Project Structure
+
 FORANDROID/
 ├── Home.py
 ├── app/
@@ -88,21 +62,9 @@ FORANDROID/
 │       └── processed/
 ├── requirements.txt
 
----
- OUTPUT FILE 
-All outputs are saved inside each case folder
-
----
-
-🙋‍♀️ Contributors
-Bhavya Rajput – Lead Developer & Analyst
-IGDTUW – Institutional Support
-
-Special thanks to the FORANDROID team for their support and contributions.
-
----
-🤝 Contributions
-Pull requests, feedback, and suggestions are welcome. Let's build better forensic tooling together.
 
 
+## Contributors
 
+*Bhavya Rajput* – Lead Developer  
+*IGDTUW* – Institutional Support
