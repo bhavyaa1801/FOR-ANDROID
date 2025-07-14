@@ -6,7 +6,7 @@ This module is part of the **FORANDROID Project**, focused on digital forensics 
 
 ---
 
-## 🧩 Module Goals
+# 🧩 Module Goals
 - Provide forensic insight into **app-domain-IP relationships**
 - **Resolve domains to IPs** and enrich them with WHOIS & GeoIP data
 - Detect **anomalous or malicious DNS activity**
